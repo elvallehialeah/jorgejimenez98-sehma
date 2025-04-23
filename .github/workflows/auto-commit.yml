@@ -1,0 +1,28 @@
+name: Auto Commit on Weekdays
+
+on:
+  schedule:
+    # Tres veces al día: 9 AM, 1 PM, y 5 PM UTC
+    - cron: '0 9 * * 1-5'
+    - cron: '0 13 * * 1-5'
+    - cron: '0 17 * * 1-5'
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Make dummy update
+        run: |
+          echo "Update: $(date)" >> update.txt
+
+      - name: Commit changes
+        run: |
+          git config user.name "Jorge Jimenez"
+          git config user.email "jorge.jimenez@sehma.com"
+          git checkout main
+          git add .
+          git commit -m "chore: daily update - $(date)"
+          git push origin main
